@@ -2,6 +2,7 @@ package dao.impl;
 
 import dao.CurrencyDao;
 import db.DataSource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.Currency;
 
@@ -13,12 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Slf4j
 public class CurrencyDaoImpl implements CurrencyDao {
+    private final DataSource dataSource;
+
     @Override
     public List<Currency> findAll() {
         List<Currency> currencies = new ArrayList<>();
-        try (Connection connection = DataSource.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStmt = connection.prepareStatement("SELECT * FROM Currencies;");
              ResultSet resultSet = preparedStmt.executeQuery();
         ) {
@@ -41,7 +45,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
     public Optional<Currency> findByCode(String code) {
         Currency currency = null;
 
-        try (Connection connection = DataSource.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStmt = connection.prepareStatement("SELECT * FROM Currencies WHERE Code = ?");
              ResultSet resultSet = preparedStmt.executeQuery();
         ) {
