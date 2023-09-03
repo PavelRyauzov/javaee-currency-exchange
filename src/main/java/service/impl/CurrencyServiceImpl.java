@@ -4,13 +4,13 @@ import dao.CurrencyDao;
 import dto.CurrencyDto;
 import exception.currency.CurrencyNotFoundException;
 import lombok.RequiredArgsConstructor;
-import service.CurrenciesService;
+import service.CurrencyService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class CurrenciesServiceImpl implements CurrenciesService {
+public class CurrencyServiceImpl implements CurrencyService {
     private final CurrencyDao currencyDao;
 
     @Override
