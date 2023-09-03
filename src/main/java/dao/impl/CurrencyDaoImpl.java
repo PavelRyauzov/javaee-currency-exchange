@@ -2,6 +2,7 @@ package dao.impl;
 
 import dao.CurrencyDao;
 import db.DataSource;
+import lombok.extern.slf4j.Slf4j;
 import model.Currency;
 
 import java.sql.Connection;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class CurrencyDaoImpl implements CurrencyDao {
     @Override
     public List<Currency> findAll() {
@@ -29,8 +31,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
                 ));
             }
         } catch (SQLException e) {
-            //todo add logging
-            e.printStackTrace();
+            log.error("Error while getting currencies from db.", e);
         }
 
         return currencies;
@@ -54,8 +55,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
                 );
             }
         } catch (SQLException e) {
-            //todo add logging
-            e.printStackTrace();
+            log.error("Error while getting currency by code", e);
         }
 
         return Optional.ofNullable(currency);
