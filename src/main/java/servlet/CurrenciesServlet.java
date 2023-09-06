@@ -11,7 +11,7 @@ import service.CurrencyService;
 
 import java.io.IOException;
 
-@WebServlet(name = "CurrenciesServlet", value = "/currencies")
+@WebServlet(value = "/currencies")
 public class CurrenciesServlet extends HttpServlet {
     private CurrencyService currencyService;
 
