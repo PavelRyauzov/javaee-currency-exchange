@@ -62,6 +62,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
             }
         } catch (SQLException e) {
             log.error("Error while getting currency by code", e);
+            throw new DatabaseException("Error while getting currency by code");
         }
 
         return Optional.ofNullable(currency);
