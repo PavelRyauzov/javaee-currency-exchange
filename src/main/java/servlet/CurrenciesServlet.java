@@ -23,7 +23,10 @@ public class CurrenciesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        new ObjectMapper().writeValue(resp.getWriter(), currencyService.findAll());
+        new ObjectMapper().writeValue(
+                resp.getWriter(),
+                currencyService.findAll()
+        );
     }
 
     @Override

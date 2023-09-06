@@ -48,17 +48,19 @@ public class CurrencyDaoImpl implements CurrencyDao {
         Currency currency = null;
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStmt = connection.prepareStatement("SELECT * FROM Currencies WHERE Code = ?");
-             ResultSet resultSet = preparedStmt.executeQuery();
+             PreparedStatement preparedStmt = connection.prepareStatement("SELECT * FROM Currencies WHERE Code = ?;");
         ) {
             preparedStmt.setString(1, code);
-            if (resultSet.next()) {
-                currency = new Currency(
-                        resultSet.getInt("ID"),
-                        resultSet.getString("Code"),
-                        resultSet.getString("FullName"),
-                        resultSet.getString("Sign")
-                );
+
+            try (ResultSet resultSet = preparedStmt.executeQuery()) {
+                if (resultSet.next()) {
+                    currency = new Currency(
+                            resultSet.getInt("ID"),
+                            resultSet.getString("Code"),
+                            resultSet.getString("FullName"),
+                            resultSet.getString("Sign")
+                    );
+                }
             }
         } catch (SQLException e) {
             log.error("Error while getting currency by code", e);
