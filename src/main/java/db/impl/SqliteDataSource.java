@@ -1,7 +1,8 @@
-package db;
+package db.impl;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import db.DataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
