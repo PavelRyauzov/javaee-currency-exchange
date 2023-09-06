@@ -2,6 +2,7 @@ package dao.impl;
 
 import dao.CurrencyDao;
 import db.DataSource;
+import exception.currency.DatabaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.Currency;
@@ -35,7 +36,8 @@ public class CurrencyDaoImpl implements CurrencyDao {
                 ));
             }
         } catch (SQLException e) {
-            log.error("Error while getting currencies from db.", e);
+            log.error("Error while getting currencies from db", e);
+            throw new DatabaseException("Error while getting currencies from db");
         }
 
         return currencies;
