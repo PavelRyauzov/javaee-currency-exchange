@@ -28,12 +28,9 @@ public class CurrencyDaoImpl implements CurrencyDao {
              ResultSet resultSet = preparedStmt.executeQuery();
         ) {
             while (resultSet.next()) {
-                currencies.add(new Currency(
-                        resultSet.getInt("ID"),
-                        resultSet.getString("Code"),
-                        resultSet.getString("FullName"),
-                        resultSet.getString("Sign")
-                ));
+                currencies.add(
+                        createCurrencyFromResultSet(resultSet)
+                );
             }
         } catch (SQLException e) {
             log.error("Error while getting currencies from db", e);
@@ -54,12 +51,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
 
             try (ResultSet resultSet = preparedStmt.executeQuery()) {
                 if (resultSet.next()) {
-                    currency = new Currency(
-                            resultSet.getInt("ID"),
-                            resultSet.getString("Code"),
-                            resultSet.getString("FullName"),
-                            resultSet.getString("Sign")
-                    );
+                    currency = createCurrencyFromResultSet(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -68,5 +60,14 @@ public class CurrencyDaoImpl implements CurrencyDao {
         }
 
         return Optional.ofNullable(currency);
+    }
+
+    private Currency createCurrencyFromResultSet(ResultSet resultSet) throws SQLException {
+        return new Currency(
+                resultSet.getInt("ID"),
+                resultSet.getString("Code"),
+                resultSet.getString("FullName"),
+                resultSet.getString("Sign")
+        );
     }
 }
