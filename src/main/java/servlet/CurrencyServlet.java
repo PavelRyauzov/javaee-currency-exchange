@@ -1,7 +1,7 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exception.currency.InvalidPathVariableException;
+import exception.common.InvalidPathVariableException;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

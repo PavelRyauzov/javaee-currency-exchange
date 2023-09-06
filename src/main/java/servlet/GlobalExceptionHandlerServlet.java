@@ -1,8 +1,8 @@
 package servlet;
 
 import exception.currency.CurrencyNotFoundException;
-import exception.currency.DatabaseException;
-import exception.currency.InvalidPathVariableException;
+import exception.common.DatabaseException;
+import exception.common.InvalidPathVariableException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

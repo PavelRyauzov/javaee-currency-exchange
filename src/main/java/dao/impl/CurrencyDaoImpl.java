@@ -2,7 +2,7 @@ package dao.impl;
 
 import dao.CurrencyDao;
 import db.DataSource;
-import exception.currency.DatabaseException;
+import exception.common.DatabaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.Currency;
