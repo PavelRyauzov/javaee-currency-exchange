@@ -1,6 +1,7 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import exception.currency.InvalidPathVariableException;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,6 +24,10 @@ public class CurrencyServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getPathInfo() == null || req.getPathInfo().equals("/")) {
+            throw new InvalidPathVariableException("Incorrect currency code in url path");
+        }
+
         String currencyCode = req.getPathInfo().replaceFirst("/", "").toUpperCase();
         new ObjectMapper().writeValue(
                 resp.getWriter(),

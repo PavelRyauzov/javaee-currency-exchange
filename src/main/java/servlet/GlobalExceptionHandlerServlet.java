@@ -2,6 +2,7 @@ package servlet;
 
 import exception.currency.CurrencyNotFoundException;
 import exception.currency.DatabaseException;
+import exception.currency.InvalidPathVariableException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,6 +19,11 @@ public class GlobalExceptionHandlerServlet extends HttpServlet {
 
         if (throwable instanceof CurrencyNotFoundException) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, throwable.getMessage());
+            return;
+        }
+
+        if (throwable instanceof InvalidPathVariableException) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, throwable.getMessage());
             return;
         }
 
