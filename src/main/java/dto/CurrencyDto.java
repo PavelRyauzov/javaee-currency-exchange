@@ -1,5 +1,7 @@
 package dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Value;
 import model.Currency;
 
@@ -7,10 +9,11 @@ import model.Currency;
  * DTO for {@link Currency} entity
  */
 @Value
+@JsonPropertyOrder({"id", "name", "code", "sign"})
 public class CurrencyDto {
     int id;
     String code;
-    String fullName;
+    @JsonProperty("name") String fullName;
     String sign;
 
     public static CurrencyDto from(final Currency currency) {
