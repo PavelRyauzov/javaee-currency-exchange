@@ -2,7 +2,7 @@ package dao.impl;
 
 import dao.CurrencyDao;
 import db.DataSource;
-import dto.CreateCurrencyDto;
+import dto.currency.CreateCurrencyDto;
 import exception.common.DatabaseException;
 import exception.currency.CurrencyAlreadyExistException;
 import lombok.RequiredArgsConstructor;

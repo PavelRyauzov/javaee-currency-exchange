@@ -1,6 +1,6 @@
 package dao;
 
-import dto.CreateCurrencyDto;
+import dto.currency.CreateCurrencyDto;
 import model.Currency;
 
 import java.util.List;

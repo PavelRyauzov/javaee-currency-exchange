@@ -1,8 +1,8 @@
 package service.impl;
 
 import dao.CurrencyDao;
-import dto.CreateCurrencyDto;
-import dto.CurrencyDto;
+import dto.currency.CreateCurrencyDto;
+import dto.currency.CurrencyDto;
 import exception.currency.CurrencyNotFoundException;
 import exception.currency.CurrencyValidationException;
 import jakarta.validation.ConstraintViolation;

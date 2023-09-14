@@ -1,7 +1,7 @@
 package service;
 
-import dto.CreateCurrencyDto;
-import dto.CurrencyDto;
+import dto.currency.CreateCurrencyDto;
+import dto.currency.CurrencyDto;
 
 import java.util.List;
 
