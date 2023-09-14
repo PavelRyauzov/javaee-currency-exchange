@@ -1,6 +1,7 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.CreateCurrencyDto;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,6 +32,15 @@ public class CurrenciesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        new ObjectMapper().writeValue(
+                resp.getWriter(),
+                currencyService.save(
+                        new CreateCurrencyDto(
+                                req.getParameter("name"),
+                                req.getParameter("code"),
+                                req.getParameter("sign")
+                        )
+                )
+        );
     }
 }

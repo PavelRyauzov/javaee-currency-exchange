@@ -2,7 +2,9 @@ package dao.impl;
 
 import dao.CurrencyDao;
 import db.DataSource;
+import dto.CreateCurrencyDto;
 import exception.common.DatabaseException;
+import exception.currency.CurrencyAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.Currency;
@@ -24,8 +26,8 @@ public class CurrencyDaoImpl implements CurrencyDao {
     public List<Currency> findAll() {
         List<Currency> currencies = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStmt = connection.prepareStatement("SELECT * FROM Currencies;");
-             ResultSet resultSet = preparedStmt.executeQuery();
+             PreparedStatement preparedStmt = connection.prepareStatement("SELECT * FROM Currencies");
+             ResultSet resultSet = preparedStmt.executeQuery()
         ) {
             while (resultSet.next()) {
                 currencies.add(
@@ -45,7 +47,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
         Currency currency = null;
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStmt = connection.prepareStatement("SELECT * FROM Currencies WHERE Code = ?;");
+             PreparedStatement preparedStmt = connection.prepareStatement("SELECT * FROM Currencies WHERE Code = ?")
         ) {
             preparedStmt.setString(1, code);
 
@@ -60,6 +62,44 @@ public class CurrencyDaoImpl implements CurrencyDao {
         }
 
         return Optional.ofNullable(currency);
+    }
+
+    @Override
+    public Currency save(CreateCurrencyDto createCurrencyDto) {
+        Currency currency = null;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStmt = connection.prepareStatement(
+                     "INSERT INTO Currencies (Code, FullName, Sign) VALUES (?, ?, ?)"
+             )
+        ) {
+            preparedStmt.setString(1, createCurrencyDto.getCode());
+            preparedStmt.setString(2, createCurrencyDto.getName());
+            preparedStmt.setString(3, createCurrencyDto.getSign());
+
+            int affectedRows = preparedStmt.executeUpdate();
+
+            try (ResultSet generatedKeys = preparedStmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    currency = new Currency(
+                            generatedKeys.getInt(1),
+                            createCurrencyDto.getCode(),
+                            createCurrencyDto.getName(),
+                            createCurrencyDto.getSign()
+                    );;
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Error while inserting currency into the db", e);
+            if (e.getErrorCode() == 19) {
+                throw new CurrencyAlreadyExistException(
+                        String.format("Currency with this code '%s' already exists", createCurrencyDto.getCode())
+                );
+            }
+            throw new DatabaseException("Error while getting currency by code");
+        }
+
+        return currency;
     }
 
     private Currency createCurrencyFromResultSet(ResultSet resultSet) throws SQLException {

@@ -1,8 +1,10 @@
 package servlet;
 
-import exception.currency.CurrencyNotFoundException;
 import exception.common.DatabaseException;
 import exception.common.InvalidPathVariableException;
+import exception.currency.CurrencyAlreadyExistException;
+import exception.currency.CurrencyNotFoundException;
+import exception.currency.CurrencyValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,8 +16,18 @@ import java.io.IOException;
 @WebServlet("/error-handler")
 public class GlobalExceptionHandlerServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Throwable throwable = (Throwable) req.getAttribute("jakarta.servlet.error.exception");
+
+        if (throwable instanceof CurrencyValidationException) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, throwable.getMessage());
+            return;
+        }
+
+        if (throwable instanceof CurrencyAlreadyExistException) {
+            resp.sendError(HttpServletResponse.SC_CONFLICT, throwable.getMessage());
+            return;
+        }
 
         if (throwable instanceof CurrencyNotFoundException) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, throwable.getMessage());

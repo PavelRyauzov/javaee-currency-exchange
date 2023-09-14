@@ -1,7 +1,7 @@
 package exception.common;
 
 public class InvalidPathVariableException extends RuntimeException {
-    public InvalidPathVariableException(String message) {
+    public InvalidPathVariableException(final String message) {
         super(message);
     }
 }
