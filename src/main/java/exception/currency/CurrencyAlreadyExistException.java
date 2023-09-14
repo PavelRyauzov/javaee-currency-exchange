@@ -1,7 +1,7 @@
 package exception.currency;
 
 public class CurrencyAlreadyExistException extends RuntimeException {
-    public CurrencyAlreadyExistException(String message) {
+    public CurrencyAlreadyExistException(final String message) {
         super(message);
     }
 }
