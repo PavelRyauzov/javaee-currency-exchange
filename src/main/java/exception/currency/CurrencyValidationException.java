@@ -11,10 +11,8 @@ public class CurrencyValidationException extends RuntimeException {
     }
 
     public CurrencyValidationException(final Collection<ConstraintViolation<Object>> violations) {
-        super(
-                violations.stream()
-                        .map(ConstraintViolation::getMessage)
-                        .collect(Collectors.joining())
-        );
+        super(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining(", ")));
     }
 }

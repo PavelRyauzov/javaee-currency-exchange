@@ -1,5 +1,6 @@
 package servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import exception.common.DatabaseException;
 import exception.common.InvalidPathVariableException;
 import exception.currency.CurrencyAlreadyExistException;
@@ -12,38 +13,35 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/error-handler")
 public class GlobalExceptionHandlerServlet extends HttpServlet {
+    private final Map<Class<? extends Throwable>, Integer> certainExceptions =
+            new HashMap<>(Map.of(
+                    CurrencyValidationException.class, HttpServletResponse.SC_BAD_REQUEST,
+                    CurrencyAlreadyExistException.class, HttpServletResponse.SC_CONFLICT,
+                    CurrencyNotFoundException.class, HttpServletResponse.SC_NOT_FOUND,
+                    InvalidPathVariableException.class, HttpServletResponse.SC_BAD_REQUEST,
+                    DatabaseException.class, HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+            ));
+
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Throwable throwable = (Throwable) req.getAttribute("jakarta.servlet.error.exception");
 
-        if (throwable instanceof CurrencyValidationException) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, throwable.getMessage());
-            return;
+        Integer statusCode = certainExceptions.get(throwable.getClass());
+
+        if (statusCode == null) {
+           resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+           return;
         }
 
-        if (throwable instanceof CurrencyAlreadyExistException) {
-            resp.sendError(HttpServletResponse.SC_CONFLICT, throwable.getMessage());
-            return;
-        }
-
-        if (throwable instanceof CurrencyNotFoundException) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, throwable.getMessage());
-            return;
-        }
-
-        if (throwable instanceof InvalidPathVariableException) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, throwable.getMessage());
-            return;
-        }
-
-        if (throwable instanceof DatabaseException) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, throwable.getMessage());
-            return;
-        }
-
-        resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        resp.setStatus(statusCode);
+        new ObjectMapper().writeValue(
+                resp.getWriter(),
+                Map.of("message", throwable.getMessage())
+        );
     }
 }
