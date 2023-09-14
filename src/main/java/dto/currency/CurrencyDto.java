@@ -13,7 +13,7 @@ import model.Currency;
 public class CurrencyDto {
     int id;
     String code;
-    @JsonProperty("name") String fullName;
+    String name;
     String sign;
 
     public static CurrencyDto from(final Currency currency) {
