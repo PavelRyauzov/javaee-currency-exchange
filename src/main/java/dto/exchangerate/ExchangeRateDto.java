@@ -18,7 +18,7 @@ public class ExchangeRateDto {
                 exchangeRate.getId(),
                 CurrencyDto.from(exchangeRate.getBaseCurrency()),
                 CurrencyDto.from(exchangeRate.getTargetCurrency()),
-                exchangeRate.getRate()
+                exchangeRate.getRate().setScale(6)
         );
     }
 }
