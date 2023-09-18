@@ -6,6 +6,7 @@ import exception.common.InvalidPathVariableException;
 import exception.currency.CurrencyAlreadyExistException;
 import exception.currency.CurrencyNotFoundException;
 import exception.currency.CurrencyValidationException;
+import exception.exchangerate.ExchangeRateNotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,6 +24,7 @@ public class GlobalExceptionHandlerServlet extends HttpServlet {
                     CurrencyValidationException.class, HttpServletResponse.SC_BAD_REQUEST,
                     CurrencyAlreadyExistException.class, HttpServletResponse.SC_CONFLICT,
                     CurrencyNotFoundException.class, HttpServletResponse.SC_NOT_FOUND,
+                    ExchangeRateNotFoundException.class, HttpServletResponse.SC_NOT_FOUND,
                     InvalidPathVariableException.class, HttpServletResponse.SC_BAD_REQUEST,
                     DatabaseException.class, HttpServletResponse.SC_INTERNAL_SERVER_ERROR
             ));

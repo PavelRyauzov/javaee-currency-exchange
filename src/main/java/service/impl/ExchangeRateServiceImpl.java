@@ -2,6 +2,7 @@ package service.impl;
 
 import dao.ExchangeRateDao;
 import dto.exchangerate.ExchangeRateDto;
+import exception.exchangerate.ExchangeRateNotFoundException;
 import lombok.RequiredArgsConstructor;
 import service.ExchangeRateService;
 
@@ -18,5 +19,18 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                 .stream()
                 .map(ExchangeRateDto::from)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ExchangeRateDto findByCodePair(String baseCurrencyCode, String targetCurrencyCode) {
+        return this.exchangeRateDao.findByCodePair(baseCurrencyCode, targetCurrencyCode)
+                .map(ExchangeRateDto::from)
+                .orElseThrow(() ->
+                        new ExchangeRateNotFoundException(
+                                String.format("Exchange rate with this code pair '%s''%s' not found",
+                                        baseCurrencyCode,
+                                        targetCurrencyCode)
+                        )
+                );
     }
 }

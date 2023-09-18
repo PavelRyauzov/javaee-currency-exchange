@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -45,6 +46,37 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
         }
 
         return exchangeRates;
+    }
+
+    @Override
+    public Optional<ExchangeRate> findByCodePair(String baseCurrencyCode, String targetCurrencyCode) {
+        ExchangeRate exchangeRate = null;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStmt = connection.prepareStatement(
+                     "select ers.ID as ers_ID, ers.Rate as ers_Rate, " +
+                             "bc.ID as bc_ID, bc.FullName as bc_FullName, bc.Code as bc_Code, bc.Sign as bc_Sign, " +
+                             "tc.ID as tc_ID, tc.FullName as tc_FullName, tc.Code as tc_Code, tc.Sign as tc_Sign " +
+                             "from ExchangeRates ers " +
+                             "join Currencies bc on ers.BaseCurrencyId = bc.ID " +
+                             "join Currencies tc on ers.TargetCurrencyId = tc.ID " +
+                             "where bc.Code = ? and tc.Code = ?"
+             )
+        ) {
+            preparedStmt.setString(1, baseCurrencyCode);
+            preparedStmt.setString(2, targetCurrencyCode);
+
+            try (ResultSet resultSet = preparedStmt.executeQuery()) {
+                if (resultSet.next()) {
+                    exchangeRate = createExchangeRateFromResultSet(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Error while getting exchange rate by code pair from db", e);
+            throw new DatabaseException("Error while getting exchange rate by code pair from db");
+        }
+
+        return Optional.ofNullable(exchangeRate);
     }
 
     private ExchangeRate createExchangeRateFromResultSet(ResultSet resultSet) throws SQLException {
