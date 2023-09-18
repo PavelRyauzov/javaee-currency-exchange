@@ -62,7 +62,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                         resultSet.getString("tc_Code"),
                         resultSet.getString("tc_Sign")
                 ),
-                resultSet.getBigDecimal("ers_Rate")
+                resultSet.getBigDecimal("ers_Rate").setScale(6)
         );
     }
 }
